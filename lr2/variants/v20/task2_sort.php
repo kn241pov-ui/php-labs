@@ -1,37 +1,45 @@
 <?php
 /**
- * Завдання 2: Сортування міст у зворотному порядку
+ * Завдання 2: Сортування міст за довжиною назви
  *
- * Варіант 20 (група C): rsort — зворотно за алфавітом
+ * Варіант 20: за довжиною назви (від короткої до довгої), при однаковій довжині — за алфавітом
  */
 require_once __DIR__ . '/layout.php';
 
 /**
- * Сортує міста у зворотному алфавітному порядку
+ * Сортує міста за довжиною назви
+
  */
-function sortCitiesReverse(string $input): array
+function sortCitiesLargeName(string $input): array
 {
     $cities = array_filter(array_map('trim', explode(' ', $input)));
-    rsort($cities);
+    usort($cities, function ($a, $b) {
+        $lenA = strlen($a);
+        $lenB = strlen($b);
+        if ($lenA === $lenB) {
+            return strcmp($a, $b);
+        }
+        return $lenB - $lenA;
+    });
     return $cities;
 }
 
 // Вхідні дані (варіант 20)
 $input = $_POST['cities'] ?? '';
 $submitted = isset($_POST['cities']);
-$defaultCities = 'Краматорськ Ладижин Бердянськ Шепетівка Новомосковськ Ромни Генічеськ Трускавець';
+$defaultCities = 'Надвірна Турка Збараж Козятин Синельникове Марганець Лисичанськ Борислав';
 
 if (!$submitted) {
     $input = $defaultCities;
 }
 
-$sorted = sortCitiesReverse($input);
+$sorted = sortCitiesLargeName($input);
 
 ob_start();
 ?>
 <div class="demo-card">
-    <h2>Сортування міст (зворотне)</h2>
-    <p class="demo-subtitle">Введіть назви міст через пробіл — сортування від Я до А</p>
+    <h2>Сортування міст за довжиною назви</h2>
+    <p class="demo-subtitle">Введіть назви міст через пробіл — сортування від довгої до короткої</p>
 
     <form method="post" class="demo-form">
         <div>
@@ -54,7 +62,7 @@ ob_start();
     <div class="array-arrow">&#8595;</div>
 
     <div>
-        <h3 class="demo-section-title-success">Відсортовані (Я→А)</h3>
+        <h3 class="demo-section-title-success">Відсортовані за довжиною назви</h3>
         <div class="array-display">
             <?php foreach ($sorted as $city): ?>
             <span class="array-item array-item-unique"><?= htmlspecialchars($city) ?></span>
@@ -62,8 +70,8 @@ ob_start();
         </div>
     </div>
 
-    <div class="demo-code">sortCitiesReverse("<?= htmlspecialchars($input) ?>")
-// rsort() — зворотний алфавітний порядок
+    <div class="demo-code">sortCitiesLargeName("<?= htmlspecialchars($input) ?>")
+// usort() — сортування за довжиною назви
 // Результат: [<?= htmlspecialchars(implode(', ', array_map(fn($c) => "\"$c\"", $sorted))) ?>]</div>
     <?php endif; ?>
 </div>
