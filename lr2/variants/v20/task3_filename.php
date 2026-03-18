@@ -2,7 +2,7 @@
 /**
  * Завдання 3: Ім'я файлу
  *
- * Варіант 20: "/var/audio/podcasts/episode_42.mp3"
+ * Варіант 20: "/home/music/collection/track_01.mp3"
  */
 require_once __DIR__ . '/layout.php';
 
@@ -33,7 +33,7 @@ function extractDirectory(string $path): string
 }
 
 // Вхідні дані (варіант 20)
-$path = $_POST['path'] ?? '/var/audio/podcasts/episode_42.mp3';
+$path = $_POST['path'] ?? '/home/music/collection/track_01.mp3';
 $submitted = isset($_POST['path']);
 
 $filename = extractFilename($path);
