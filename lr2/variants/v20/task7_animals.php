@@ -2,7 +2,7 @@
 /**
  * Завдання 7: Генератор імен тварин
  *
- * Варіант 20: склади "ту ге ла мі ро ка ші ну бе зо", 4 імені, 2 складів
+ * Варіант 20: склади "кор бу зай ні тел мо фар ша лі гон", 4 імені, 3 складів
  */
 require_once __DIR__ . '/layout.php';
 
@@ -41,9 +41,9 @@ function generateMultipleNames(array $syllables, int $namesCount = 4, int $sylla
 }
 
 // Обробка форми (варіант 20)
-$syllablesInput = $_POST['syllables'] ?? 'ту ге ла мі ро ка ші ну бе зо';
+$syllablesInput = $_POST['syllables'] ?? 'кор бу зай ні тел мо фар ша лі гон';
 $count = (int)($_POST['count'] ?? 4);
-$syllablesPerName = (int)($_POST['syllables_per_name'] ?? 2);
+$syllablesPerName = (int)($_POST['syllables_per_name'] ?? 3);
 $submitted = isset($_POST['syllables']);
 
 if ($count < 1) $count = 1;
@@ -67,7 +67,7 @@ ob_start();
     <form method="post" class="demo-form">
         <div>
             <label for="syllables">Склади (через пробіл)</label>
-            <input type="text" id="syllables" name="syllables" value="<?= htmlspecialchars($syllablesInput) ?>" placeholder="ту ге ла мі ро">
+            <input type="text" id="syllables" name="syllables" value="<?= htmlspecialchars($syllablesInput) ?>" placeholder="кор бу зай ні тел">
         </div>
         <div class="form-row">
             <div>
@@ -76,7 +76,7 @@ ob_start();
             </div>
             <div>
                 <label for="syllables_per_name">Складів в імені</label>
-                <input type="number" id="syllables_per_name" name="syllables_per_name" value="<?= $syllablesPerName ?>" min="2" max="4">
+                <input type="number" id="syllables_per_name" name="syllables_per_name" value="<?= $syllablesPerName ?>" min="3" max="4">
             </div>
         </div>
         <button type="submit" class="btn-submit">Згенерувати</button>
