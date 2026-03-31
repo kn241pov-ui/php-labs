@@ -2,94 +2,95 @@
 /**
  * Завдання 9: Асоціативний масив
  *
- * Варіант 20 (група C): ім'я => зарплата (замість ім'я => вік)
- * Сортування: ksort (за іменем), asort (за зарплатою)
+ * Варіант 20: студенти => оцінки (1-12)
+ * Сортування: ksort (за ім'ям), asort (за оцінками)
  */
 require_once __DIR__ . '/layout.php';
 
 /**
- * Сортує асоціативний масив за іменами (ключами)
+ * Сортує масив за ключами (прізвищами студентів) — алфавітний порядок
  */
-function sortByName(array $employees): array
+function sortByStudentName(array $students): array
 {
-    ksort($employees);
-    return $employees;
+    ksort($students);
+    return $students;
 }
 
 /**
- * Сортує асоціативний масив за зарплатою (значеннями)
+ * Сортує масив за значеннями (оцінками) — від найнижчої до найвищої
  */
-function sortBySalary(array $employees): array
+function sortByGrade(array $students): array
 {
-    asort($employees);
-    return $employees;
+    asort($students);
+    return $students;
 }
 
-// Дані (варіант 20)
-$employees = [
-    'Микола' => 44000,
-    'Жанна' => 67500,
-    'Ростислав' => 31000,
-    'Тамара' => 58000,
-    'Юрій' => 22000,
-    'Елла' => 75000,
-    'Захар' => 40000,
+// Вхідні дані згідно з умовою
+$students = [
+    "Бутенко Григорій" => 5,
+    "Ганущак Оксана" => 11,
+    "Журавель Тарас" => 8,
+    "Козак Вероніка" => 3,
+    "Ляшенко Богдан" => 10,
+    "Савчук Карина" => 12,
+    "Юрченко Дмитро" => 1,
 ];
 
-// Обробка
-$sortBy = $_POST['sort'] ?? $_GET['sort'] ?? 'name';
-$sorted = $sortBy === 'salary' ? sortBySalary($employees) : sortByName($employees);
+// Обробка сортування
+$sortBy = $_POST['sort'] ?? 'name';
+$sorted = ($sortBy === 'grade') ? sortByGrade($students) : sortByStudentName($students);
 
 ob_start();
 ?>
 <div class="demo-card">
-    <h2>Асоціативний масив</h2>
-    <p class="demo-subtitle">Сортування за іменем або за зарплатою</p>
+    <h2>Асоціативний масив: Студенти</h2>
+    <p class="demo-subtitle">Використання функцій ksort() та asort() для обробки даних</p>
 
-    <div class="flex-buttons">
+    <div class="flex-buttons" style="display: flex; gap: 10px; margin-bottom: 20px;">
         <form method="post">
             <input type="hidden" name="sort" value="name">
-            <button type="submit" class="<?= $sortBy === 'name' ? 'btn-submit' : 'btn-secondary' ?>">За іменем</button>
+            <button type="submit" class="<?= $sortBy === 'name' ? 'btn-submit' : 'btn-secondary' ?>">За прізвищем (ksort)</button>
         </form>
         <form method="post">
-            <input type="hidden" name="sort" value="salary">
-            <button type="submit" class="<?= $sortBy === 'salary' ? 'btn-submit' : 'btn-secondary' ?>">За зарплатою</button>
+            <input type="hidden" name="sort" value="grade">
+            <button type="submit" class="<?= $sortBy === 'grade' ? 'btn-submit' : 'btn-secondary' ?>">За оцінкою (asort)</button>
         </form>
     </div>
 
     <div class="demo-section">
-        <h3>Вхідні дані</h3>
-        <div class="demo-code">$employees = [
-<?php foreach ($employees as $name => $salary): ?>
-    "<?= $name ?>" => <?= number_format($salary, 0, '', ' ') ?>,
-<?php endforeach; ?>
-];</div>
-    </div>
-
-    <div class="demo-section">
-        <h3>Відсортовано: <span class="demo-tag demo-tag-primary"><?= $sortBy === 'salary' ? 'за зарплатою' : 'за іменем' ?></span></h3>
+        <h3>Результат сортування: <span class="demo-tag demo-tag-primary"><?= $sortBy === 'grade' ? 'за оцінкою' : 'за прізвищем' ?></span></h3>
         <table class="demo-table">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Ім'я <?= $sortBy === 'name' ? '&#8593;' : '' ?></th>
-                    <th>Зарплата <?= $sortBy === 'salary' ? '&#8593;' : '' ?></th>
+                    <th>ПІБ студента <?= $sortBy === 'name' ? '&#8595;' : '' ?></th>
+                    <th>Бали (1-12) <?= $sortBy === 'grade' ? '&#8593;' : '' ?></th>
                 </tr>
             </thead>
             <tbody>
-                <?php $i = 1; foreach ($sorted as $name => $salary): ?>
+                <?php $i = 1; foreach ($sorted as $name => $grade): ?>
                 <tr>
                     <td><?= $i++ ?></td>
                     <td><?= htmlspecialchars($name) ?></td>
-                    <td><span class="demo-tag demo-tag-success"><?= number_format($salary, 0, '', ' ') ?> ₴</span></td>
+                    <td>
+                        <span class="demo-tag <?= $grade >= 10 ? 'demo-tag-success' : ($grade <= 3 ? 'demo-tag-danger' : 'demo-tag-primary') ?>">
+                            <?= $grade ?> балів
+                        </span>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 
-    <div class="demo-code"><?= $sortBy === 'salary' ? 'sortBySalary' : 'sortByName' ?>($employees);
-// <?= $sortBy === 'salary' ? 'asort($employees)' : 'ksort($employees)' ?></div>
+    <div class="demo-code">
+// Використаний метод:
+<?php if ($sortBy === 'grade'): ?>
+asort($students); // Сортування за значенням (оцінкою)
+<?php else: ?>
+ksort($students); // Сортування за ключем (ім'ям)
+<?php endif; ?>
+    </div>
 </div>
 <?php
 $content = ob_get_clean();
