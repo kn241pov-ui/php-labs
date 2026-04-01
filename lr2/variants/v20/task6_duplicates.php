@@ -1,109 +1,76 @@
 <?php
 /**
- * Завдання 6: Найчастіший елемент (мода)
+ * Завдання 6: Пошук унікальних елементів
  *
- * Варіант 20 (група C): мода замість дублікатів
- * Масив: [1, 4, 1, 1, 6, 1, 3, 1, 9, 7, 1] → 1 (6 разів)
+ * Варіант 20: Очікуваний результат: [5, 14, 2, 8]
+ * Масив: [3, 10, 7, 12, 10, 3, 5, 7, 14, 12, 2, 8] 
  */
 require_once __DIR__ . '/layout.php';
 
 /**
- * Знаходить найчастіший елемент (моду) в масиві
+ * Знаходить елементи, які зустрічаються в масиві лише один раз
  *
- * @return array{value: mixed, count: int}|null
+ * @param array $arr
+ * @return array
  */
-function findMode(array $arr): ?array
+function findUniqueElements(array $arr): array
 {
     if (empty($arr)) {
-        return null;
+        return [];
     }
 
+    // Рахуємо кількість кожного елемента
     $counts = array_count_values($arr);
-    $maxCount = max($counts);
-    $modeValue = array_search($maxCount, $counts);
 
-    return ['value' => $modeValue, 'count' => $maxCount];
+    // Фільтруємо: залишаємо тільки ті, що зустрічаються 1 раз
+    $uniques = array_filter($counts, fn($count) => $count === 1);
+
+    // Повертаємо тільки ключі (самі числа)
+    return array_keys($uniques);
 }
 
-// Обробка форми (варіант 20)
-$input = $_POST['array'] ?? '1, 4, 1, 1, 6, 1, 3, 1, 9, 7, 1';
+// Обробка форми
+$input = $_POST['array'] ?? '3, 10, 7, 12, 10, 3, 5, 7, 14, 12, 2, 8';
 $submitted = isset($_POST['array']);
 
+// Перетворюємо рядок у масив чисел
 $arr = array_map('trim', explode(',', $input));
 $arr = array_filter($arr, fn($v) => $v !== '');
 
-$mode = findMode($arr);
+// Викликаємо нову функцію
+$uniqueElements = findUniqueElements($arr);
 
 ob_start();
 ?>
 <div class="demo-card">
-    <h2>Найчастіший елемент (мода)</h2>
-    <p class="demo-subtitle">Знаходить елемент, що зустрічається найчастіше в масиві</p>
+    <h2>Пошук унікальних елементів</h2>
+    <p class="demo-subtitle">Виводить елементи, які зустрічаються в масиві лише один раз</p>
 
     <form method="post" class="demo-form">
         <div>
             <label for="array">Масив (через кому)</label>
-            <input type="text" id="array" name="array" value="<?= htmlspecialchars($input) ?>" placeholder="1, 4, 1, 1, 6">
+            <input type="text" id="array" name="array" value="<?= htmlspecialchars($input) ?>">
         </div>
-        <button type="submit" class="btn-submit">Знайти моду</button>
+        <button type="submit" class="btn-submit">Знайти унікальні</button>
     </form>
 
     <?php if (!empty($arr)): ?>
     <div class="demo-section">
-        <h3>Вхідний масив</h3>
+        <h3>Результат:</h3>
         <div class="array-display">
-            <?php foreach ($arr as $item): ?>
-            <span class="array-item <?= $mode && trim($item) == $mode['value'] ? 'array-item-unique' : '' ?>"><?= htmlspecialchars($item) ?></span>
+            <?php foreach ($uniqueElements as $item): ?>
+                <span class="array-item array-item-unique"><?= htmlspecialchars($item) ?></span>
             <?php endforeach; ?>
         </div>
+        <?php if (empty($uniqueElements)): ?>
+            <p>Унікальних елементів не знайдено.</p>
+        <?php endif; ?>
     </div>
 
-    <?php if ($mode): ?>
-    <div class="demo-result">
-        <h3>Мода</h3>
-        <div class="demo-result-value"><?= htmlspecialchars($mode['value']) ?> (зустрічається <?= $mode['count'] ?> разів)</div>
+    <div class="demo-code">
+        // Очікуваний результат для [3, 10, 7, 12, 10, 3, 5, 7, 14, 12, 2, 8]:
+        // [5, 14, 2, 8]
     </div>
-
-    <div class="demo-section">
-        <h3>Частота елементів</h3>
-        <table class="demo-table">
-            <thead>
-                <tr>
-                    <th>Елемент</th>
-                    <th>Кількість</th>
-                    <th>Статус</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $counts = array_count_values($arr);
-                arsort($counts);
-                foreach ($counts as $value => $count):
-                ?>
-                <tr>
-                    <td><?= htmlspecialchars($value) ?></td>
-                    <td><?= $count ?></td>
-                    <td>
-                        <?php if ($value == $mode['value']): ?>
-                        <span class="demo-tag demo-tag-success">Мода</span>
-                        <?php else: ?>
-                        <span class="demo-tag demo-tag-primary"><?= $count ?>×</span>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <?php else: ?>
-    <div class="demo-result demo-result-info">
-        <h3>Результат</h3>
-        <div class="demo-result-value">Масив порожній</div>
-    </div>
-    <?php endif; ?>
-
-    <div class="demo-code">findMode([<?= htmlspecialchars(implode(', ', $arr)) ?>])
-// Результат: <?= $mode ? "мода = {$mode['value']} ({$mode['count']} разів)" : 'null' ?></div>
     <?php endif; ?>
 </div>
 <?php

@@ -2,45 +2,46 @@
 /**
  * Завдання 8: Операції з масивами
  *
- * Варіант 20 (група C): array_intersect + sort ascending
- * createArray(): довжина 3-6, значення 10-20
+ * Варіант 20: array_intersect + sort ascending
+ * createArray(): довжина 3-6, значення 1-50
  */
 require_once __DIR__ . '/layout.php';
 
 /**
- * Створює масив випадкової довжини (3-6) з випадковими значеннями (10-20)
+ * Створює масив випадкової довжини (3-6) з випадковими значеннями (1-50)
  */
 function createArray(): array
 {
-    $length = random_int(3, 6);
+    $length = random_int(4, 8);
     $arr = [];
     for ($i = 0; $i < $length; $i++) {
-        $arr[] = random_int(10, 20);
+        $arr[] = random_int(1, 50);
     }
     return $arr;
 }
 
 /**
- * Знаходить спільні елементи двох масивів і сортує за зростанням
+ * Знаходить спільні елементи двох масивів і сортує за спаданням
  */
-function intersectSorted(array $a, array $b): array
+function mergeSorted(array $a, array $b): array
 {
-    $common = array_intersect($a, $b);
-    sort($common);
-    return array_values($common);
+    $merged = array_merge($a, $b);
+    $unique = array_unique($merged);
+    rsort($unique);
+    return $unique;
 }
 
 // Генеруємо масиви (варіант 20)
 $arr1 = createArray();
 $arr2 = createArray();
 
-$result = intersectSorted($arr1, $arr2);
+$result = mergeSorted($arr1, $arr2);
 
 ob_start();
 ?>
 <div class="demo-card demo-card-wide">
-    <h2>Операції з масивами</h2>
-    <p class="demo-subtitle">createArray(), перетин (array_intersect), сортування за зростанням</p>
+    <h2>Операції з масивами: Об'єднання</h2>
+    <p class="demo-subtitle">Обʼєднати → видалити дублікати → сортувати за спаданням</p>
 
     <form method="post" class="demo-form">
         <button type="submit" name="regenerate" class="btn-submit">Згенерувати нові масиви</button>
@@ -50,7 +51,7 @@ ob_start();
         <h3>Масив 1</h3>
         <div class="array-display">
             <?php foreach ($arr1 as $v): ?>
-            <span class="array-item <?= in_array($v, $result) ? 'array-item-unique' : '' ?>"><?= $v ?></span>
+                <span class="array-item"><?= $v ?></span>
             <?php endforeach; ?>
         </div>
     </div>
@@ -59,31 +60,29 @@ ob_start();
         <h3>Масив 2</h3>
         <div class="array-display">
             <?php foreach ($arr2 as $v): ?>
-            <span class="array-item <?= in_array($v, $result) ? 'array-item-unique' : '' ?>"><?= $v ?></span>
+                <span class="array-item"><?= $v ?></span>
             <?php endforeach; ?>
         </div>
     </div>
 
-    <div class="array-arrow">&#8595; Перетин (спільні елементи)</div>
+    <div class="array-arrow">&#8595; Об'єднання та очищення</div>
 
     <div>
-        <h3 class="demo-section-title-success">Результат (відсортований за зростанням)</h3>
-        <?php if (!empty($result)): ?>
+        <h3 class="demo-section-title-success">Результат (унікальні, за спаданням)</h3>
         <div class="array-display">
             <?php foreach ($result as $v): ?>
-            <span class="array-item array-item-unique"><?= $v ?></span>
+                <span class="array-item array-item-unique"><?= $v ?></span>
             <?php endforeach; ?>
         </div>
-        <?php else: ?>
-        <p class="demo-subtitle">Спільних елементів не знайдено</p>
-        <?php endif; ?>
     </div>
 
-    <div class="demo-code">$a = createArray(); // [<?= implode(', ', $arr1) ?>]
-$b = createArray(); // [<?= implode(', ', $arr2) ?>]
-intersectSorted($a, $b);
-// array_intersect → sort
-// Результат: [<?= implode(', ', $result) ?>]</div>
+    <div class="demo-code">
+$a = [<?= implode(', ', $arr1) ?>];
+$b = [<?= implode(', ', $arr2) ?>];
+$result = array_unique(array_merge($a, $b));
+rsort($result);
+// Результат: [<?= implode(', ', $result) ?>]
+    </div>
 </div>
 <?php
 $content = ob_get_clean();
