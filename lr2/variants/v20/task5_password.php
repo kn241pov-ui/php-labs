@@ -2,11 +2,12 @@
 /**
  * Завдання 5: Генератор паролів
  *
- * Варіант 20: пароль без підрядка логіну (>= 3 символи)
+ * Варіант 20 (група C, Sub3): пароль без підрядка логіну (>= 3 символи)
  * Довжина: 12
  */
 require_once __DIR__ . '/layout.php';
 
+function generatePassword(int $length = 12): string
 function generatePassword(int $length = 12): string
 {
     $upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
