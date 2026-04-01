@@ -8,7 +8,7 @@ require_once __DIR__ . '/layout.php';
 require_once __DIR__ . '/Product.php';
 
 // Оригінальний об'єкт (через конструктор)
-$product3 = new Product('Рюкзак Osprey', 6800.00, 'Аксесуари');
+$product3 = new Product('Юпітер', 139822.0, 95);
 
 // Клонуємо — __clone() задає значення за замовчанням
 $product4 = clone $product3;
@@ -40,7 +40,7 @@ ob_start();
     <div class="users-grid">
         <div class="user-card">
             <div class="user-card-header">
-                <div class="user-card-avatar avatar-amber">Р</div>
+                <div class="user-card-avatar avatar-amber">Ю</div>
                 <div>
                     <div class="user-card-name"><?= htmlspecialchars($product3->name) ?></div>
                     <div class="user-card-label">$product3 <span class="user-card-badge badge-constructor">original</span></div>
@@ -52,12 +52,12 @@ ob_start();
                     <span class="user-card-field-value"><?= htmlspecialchars($product3->name) ?></span>
                 </div>
                 <div class="user-card-field">
-                    <span class="user-card-field-label">price</span>
-                    <span class="user-card-field-value"><?= $product3->price ?> грн</span>
+                    <span class="user-card-field-label">diameter</span>
+                    <span class="user-card-field-value"><?= $product3->diameter ?> км</span>
                 </div>
                 <div class="user-card-field">
-                    <span class="user-card-field-label">category</span>
-                    <span class="user-card-field-value"><?= htmlspecialchars($product3->category) ?></span>
+                    <span class="user-card-field-label">moons</span>
+                    <span class="user-card-field-value"><?= $product3->moons ?></span>
                 </div>
             </div>
         </div>
@@ -76,12 +76,12 @@ ob_start();
                     <span class="user-card-field-value"><?= htmlspecialchars($product4->name) ?></span>
                 </div>
                 <div class="user-card-field">
-                    <span class="user-card-field-label">price</span>
-                    <span class="user-card-field-value"><?= $product4->price ?> грн</span>
+                    <span class="user-card-field-label">diameter</span>
+                    <span class="user-card-field-value"><?= $product4->diameter ?> км</span>
                 </div>
                 <div class="user-card-field">
-                    <span class="user-card-field-label">category</span>
-                    <span class="user-card-field-value"><?= htmlspecialchars($product4->category) ?></span>
+                    <span class="user-card-field-label">moons</span>
+                    <span class="user-card-field-value"><?= $product4->moons ?></span>
                 </div>
             </div>
         </div>
