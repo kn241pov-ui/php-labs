@@ -40,42 +40,30 @@ class RegformController extends PageController
         $this->render('regform/done', ['regData' => $data], 'Реєстрація успішна');
     }
 
-    private function validate(array $data): array
-    {
-        $errors = [];
+    private function validate(array $data): array {
+    $errors = [];
+    $login = trim($data['login'] ?? '');
+    $p1 = $data['password'] ?? '';
+    $p2 = $data['password_confirm'] ?? '';
+    $email = trim($data['email'] ?? '');
 
-        $login = is_string($data['login'] ?? '') ? trim($data['login'] ?? '') : '';
-        if ($login === '') {
-            $errors['login'] = "Логін є обов'язковим.";
-        } else {
-            if (preg_match('/\s/', $login)) {
-                $errors['login'] = 'Логін має бути одним словом без пробілів.';
-            } elseif ((function_exists('mb_strlen') ? mb_strlen($login) : strlen($login)) < 5) {
-                $errors['login'] = 'Логін має містити щонайменше 5 символів.';
-            } elseif (preg_match('/\d/', $login)) {
-                $errors['login'] = 'Логін не повинен містити цифри.';
-            }
-        }
+    // Логін (просто обов'язковий)
+    if ($login === '') $errors['login'] = "Логін є обов'язковим.";
 
-        $password = is_string($data['password'] ?? '') ? ($data['password'] ?? '') : '';
-        if ($password === '') {
-            $errors['password'] = "Пароль є обов'язковим.";
-        } else {
-            $pwdLen = function_exists('mb_strlen') ? mb_strlen($password) : strlen($password);
-            if ($pwdLen < 5) {
-                $errors['password'] = 'Пароль має містити щонайменше 5 символів.';
-            } elseif (!preg_match('/\d/', $password)) {
-                $errors['password'] = 'Пароль має містити щонайменше одну цифру.';
-            }
-        }
+    // Пароль 1 та Пароль 2 мають збігатися
+    if ($p1 !== $p2) $errors['password_confirm'] = "Паролі не збігаються.";
 
-        $passwordConfirm = is_string($data['password_confirm'] ?? '') ? ($data['password_confirm'] ?? '') : '';
-        if ($passwordConfirm === '') {
-            $errors['password_confirm'] = "Підтвердження паролю є обов'язковим.";
-        } elseif ($password !== $passwordConfirm) {
-            $errors['password_confirm'] = 'Паролі не збігаються.';
-        }
+    // Пароль — мінімум 5 символів
+    if (strlen($p1) < 5) $errors['password'] = "Пароль занадто короткий, мінімум 5 символів.";
 
-        return $errors;
+    // Пароль — має містити щонайменше 1 цифру
+    if (!preg_match('/\d/', $p1)) $errors['password_digit'] = "Пароль має містити хоча б одну цифру.";
+
+    // E-mail — формат: символи@хост.зона
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email'] = "Невірний формат електронної пошти.";
     }
+
+    return $errors;
+}
 }
