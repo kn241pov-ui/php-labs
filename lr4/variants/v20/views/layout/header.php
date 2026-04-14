@@ -24,14 +24,14 @@ $navItems = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars(($pageTitle ?? '') !== '' ? $pageTitle : 'Кулінарний блог') ?> — Кулінарний блог</title>
+    <title><?= htmlspecialchars(($pageTitle ?? '') !== '' ? $pageTitle : 'Кулінарний блог') ?> — Пральня</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body style="background-color: <?= htmlspecialchars($bgColor) ?>">
     <header class="header">
         <div class="container">
             <div class="header__inner">
-                <a href="index.php" class="header__logo">Кулінарний блог</a>
+                <a href="index.php" class="header__logo">Пральня</a>
                 <?php if ($greetingText !== ''): ?>
                     <span class="header__greeting"><?= $greetingText ?></span>
                 <?php endif; ?>
